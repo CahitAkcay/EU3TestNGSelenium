@@ -62,7 +62,6 @@ public class TestBase {
         if (env==null){
             url =ConfigurationReader.get("url");
         }else{
-
             url = ConfigurationReader.get(env+"_url");
         }
         driver = Driver.get();
