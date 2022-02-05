@@ -10,32 +10,38 @@ import org.testng.annotations.Test;
 
 public class DDFLoginTest extends TestBase {
 
+    //getting data with 2d array
     @DataProvider
-    public Object [][] userData(){
+    public Object[][] userData() {
+        ExcelUtil qa3short = new ExcelUtil("src/test/resources/Vytracktestdata.xlsx", "QA3-short");
 
-        ExcelUtil qa3short = new ExcelUtil("src/test/resources/Vytracktestdata.xlsx","QA3-all");
-
-        String [][] dataArray =qa3short.getDataArrayWithoutFirstRow();
+        String [][] dataArray = qa3short.getDataArrayWithoutFirstRow();
 
         return dataArray;
     }
 
+    //how make connection with your data provider
     @Test(dataProvider = "userData")
-    public void test1(String username,String password,String firstName,String lastName){
-        extentLogger=report.createTest("Test "+firstName+" "+lastName);
-        LoginPage loginPage = new LoginPage();
+    //putting the keyname of the sheet as our excel file
+    public void test1(String username,String password,String firstname,String lastname){
 
-        loginPage.login(username,password);
+        extentLogger=report.createTest("test" +firstname+" "+ lastname);
 
+        //we created login page
+        LoginPage loginPage= new LoginPage();
+        //we're passing the names and password from data provider to login page
+        loginPage.login(username, password);
+
+        //we are at dashboard page and we said to wait until loader screen disappear
         DashboardPage dashboardPage = new DashboardPage();
         dashboardPage.waitUntilLoaderScreenDisappear();
 
-        String actualFullName = dashboardPage.getUserName();
-        String expectedFullName = firstName+" "+lastName;
+        String actualFullname = dashboardPage.getUserName();
+        String expectedFullname = firstname+" "+lastname;
 
-        Assert.assertEquals(actualFullName,expectedFullName,"verify fullname");
-        extentLogger.pass("PASSED");
+        Assert.assertEquals(actualFullname,expectedFullname,"verify fullname");
+
+        extentLogger.pass("Pass");
+
     }
-
-
 }
